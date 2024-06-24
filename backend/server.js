@@ -8,6 +8,10 @@ const app = express()
 
 const PORT = process.env.PORT || 5000
 
+app.use(express.json())    // to parse json data
+app.use(express.urlencoded({ extended: true }))    // to parse form data(urlencoded)
+// app.use(cookieParser())   // to parse cookies
+
 
 // routes import
 import authRoutes from "./routes/auth.routes.js"
