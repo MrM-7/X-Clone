@@ -66,7 +66,34 @@ export const signup = async (req, res) => {
 }
 
 export const login = async (req, res) => {
-    res.json({ message: "Login route" })
+    try {
+        
+        const { username, password } = req.body
+
+        if(!username || !password){
+            return res.status(400).json({ error: "All fields are required" })
+        }
+
+        let user = await User.findOne({ username })
+
+        const isPasswordCorrect = await bcrypt.compare(password, user?.password || "")
+
+        if(!user || !isPasswordCorrect){
+            return res.status(400).json({ error: "Invalid credentials" })
+        }
+
+        generateTokenAndSetCookie(user._id, res)
+
+        user = await User.findById(user._id).select("-password")
+
+        res
+        .status(200)
+        .json({ data: user, success: "Login successful" })
+
+    } catch (error) {
+        console.log("Error in login controller: ", error.message);
+        res.status(500).json({ error: "Login failed" })
+    }
 }
 
 export const logout = async (req, res) => {
