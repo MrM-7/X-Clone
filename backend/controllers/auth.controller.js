@@ -97,5 +97,13 @@ export const login = async (req, res) => {
 }
 
 export const logout = async (req, res) => {
-    res.json({ message: "Logout route" })
+    try {
+        res.cookie("token", "", { maxAge: 0, httpOnly: true })
+
+        res.status(200).json({ success: "Logout successful" })
+
+    } catch (error) {
+        console.log("Error in logout controller: ", error.message);
+        res.status(500).json({ error: "Logout failed" })
+    }
 }
