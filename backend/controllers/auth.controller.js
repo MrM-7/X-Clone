@@ -107,3 +107,18 @@ export const logout = async (req, res) => {
         res.status(500).json({ error: "Logout failed" })
     }
 }
+
+export const getMe = async (req, res) => {
+    try {
+        const user = await User.findById(req?.user._id).select("-password")
+
+        if(!user){
+            return res.status(500).json({ error: "User not found" })
+        }
+
+        res.status(200).json({ data: user, success: "User found" })
+    } catch (error) {
+        console.log("Error in getMe controller: ", error.message);
+        res.status(500).json({ error: "Internal server error" })
+    }
+}

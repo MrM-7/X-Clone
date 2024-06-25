@@ -1,6 +1,7 @@
 import express from "express"
 import dotenv from "dotenv"
 import connectDB from "./db/index.js"
+import cookieParser from "cookie-parser"
 
 dotenv.config()
 
@@ -10,7 +11,7 @@ const PORT = process.env.PORT || 5000
 
 app.use(express.json())    // to parse json data
 app.use(express.urlencoded({ extended: true }))    // to parse form data(urlencoded)
-// app.use(cookieParser())   // to parse cookies
+app.use(cookieParser())   // to parse cookies
 
 
 // routes import
