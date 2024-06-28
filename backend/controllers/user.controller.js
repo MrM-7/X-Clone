@@ -55,7 +55,7 @@ export const toggleFollow = async (req, res) => {
                 to: modifiedUser._id,
                 type: 'follow'
             })
-            
+
             res.status(200).json({ message: "User followed successfully" })
         }
 
@@ -64,3 +64,34 @@ export const toggleFollow = async (req, res) => {
         res.status(500).json({ error: "Internal server error" })
     }
 }
+
+export const getSuggestedUsers = async (req, res) => {
+    try {
+        const userId = req.user._id;
+        const following = req.user.following;
+
+        const users = await User.aggregate([
+            {
+                $match: {
+                    _id: { $nin: [...following, userId] }
+                }
+            },
+            { $sample: { size: 5 } } // Get 5 random users
+        ]);
+
+        const usersWithoutPassword = users.map(user => {
+            user.password = null;
+            return user;
+        });
+
+        if (!usersWithoutPassword.length) {
+            return res.status(404).json({ error: "No suggested users found" });
+        }
+
+        res.status(200).json(usersWithoutPassword);
+
+    } catch (error) {
+        console.error("Error in getSuggestedUsers:", error.message);
+        res.status(500).json({ error: "Internal server error" });
+    }
+};

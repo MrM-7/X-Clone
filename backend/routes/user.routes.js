@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { verifyToken } from "../middleware/auth.middleware.js";
-import { getUserProfile, toggleFollow } from "../controllers/user.controller.js";
+import { getSuggestedUsers, getUserProfile, toggleFollow } from "../controllers/user.controller.js";
 
 const router = Router()
 
@@ -13,5 +13,9 @@ router
 router
 .route("/toggle-follow/:id")
 .post(toggleFollow)
+
+router
+.route("/suggested")
+.get(getSuggestedUsers)
 
 export default router
