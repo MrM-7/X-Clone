@@ -80,7 +80,7 @@ export const getSuggestedUsers = async (req, res) => {
         ]);
 
         const usersWithoutPassword = users.map(user => {
-            user.password = null;
+            user.password = undefined;
             return user;
         });
 
